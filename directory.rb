@@ -13,7 +13,6 @@ students = [
   "Norman Bates"
 ]
 
-
 def print_header
   puts "The students of Villains Academy"
   puts "-------------"
@@ -26,8 +25,6 @@ end
 def print_footer(names)
   puts "Overall, we have #{names.length} great students"
 end
-
-
 
 #call the methods to run the program
 print_header
