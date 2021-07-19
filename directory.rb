@@ -31,7 +31,6 @@ def print_footer(students)
 end
 
 #call the methods to run the program
-#students = input_students
 students = input_students
 print_header
 print(students)
