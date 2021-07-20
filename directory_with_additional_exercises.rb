@@ -1,16 +1,17 @@
 @students = [] #empty array accesible to all methods
 
 def interactive_menu
-   loop do
+  loop do
     print_menu
     process(gets.chomp)
   end
 end
 
 def print_menu
-    puts "1. Input the students"
-    puts "2. Show the students"
-    puts "9. Exit program"
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "3. Save the list of students to the file students.csv"
+  puts "9. Exit program"
 end
 
 def process(selection)
@@ -19,6 +20,8 @@ def process(selection)
       input_students
     when "2"
       show_students
+    when "3"
+      save_students
     when "9"
       exit
     else
@@ -27,15 +30,10 @@ def process(selection)
 end
 
 def show_students
-    print_header
-    print_students_list
-    print_footer
+  print_header
+  print_students_list
+  print_footer
 end
-
-
-
-
-
 
 def input_students
   puts "Please enter the names of the students"
@@ -75,7 +73,7 @@ def input_students
     end
     
     # Add the student hash to the array
-    @students << {name: name, cohort: cohort, hobby: hobby, occupation: occupation, nationality: nationality}
+    @students << {name: name.capitalize, cohort: cohort, hobby: hobby, occupation: occupation, nationality: nationality.capitalize}
     
     if @students.length == 1
       puts "Now we have #{@students.length} student"
@@ -95,19 +93,17 @@ def print_header
 end
 
 def print_students_list
-    existing_cohorts = @students.map do |student|
-      student[:cohort].capitalize!
-    end
+  existing_cohorts = @students.map { |student| student[:cohort] }
 
-    existing_cohorts.uniq.each do |month|
-      puts "#{month} cohort students:".upcase
-      @students.each do |student|
-        if student[:cohort] == month
-          puts "name: #{student[:name]}"
-          puts "hobby: #{student[:hobby]}, occupation: #{student[:occupation]}, nationality #{student[:nationality]}\n\n"
-        end
+  existing_cohorts.uniq.each do |month|
+    puts "#{month} cohort students:".upcase
+    @students.each do |student|
+      if student[:cohort] == month
+        puts "Name: #{student[:name]}"
+        puts "Hobby: #{student[:hobby]}, Occupation: #{student[:occupation]}, Nationality: #{student[:nationality]}\n\n"
       end
     end
+  end
 end
 
 def print_footer
@@ -119,6 +115,18 @@ def print_footer
     else
       puts "Overall, we have #{@students.length} great students".center(50)
   end
+end
+
+def save_students
+  #open file for writing
+  file = File.open("students.csv", "w")
+  #iterate over the array of students
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort], student[:hobby], student[:occupation], student[:nationality]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  file.close
 end
 
 #call interactive menu to run the program
