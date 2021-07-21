@@ -2,8 +2,9 @@
 
 def interactive_menu
   loop do
+    try_load_students
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -43,33 +44,33 @@ def input_students
   puts "To finish, just hit return (enter) twice"
 
   # Get the first name
-  name = gets.chomp
+  name = STDIN.gets.chomp
   # if name is an empty string - repeat this code
   while !name.empty? do
     puts "Please enter their hobby"
-    hobby = gets.chomp
+    hobby = STDIN.gets.chomp
     if hobby == ""
       hobby = "not entered"
     end
     
     puts "Please enter their current occupation"
-    occupation = gets.chomp
+    occupation = STDIN.gets.chomp
     if occupation == ""
       occupation = "not entered"
     end
     
     puts "Please enter their nationality"
-    nationality = gets.chomp
+    nationality = STDIN.gets.chomp
     if nationality == ""
       nationality = "not entered"
     end
     
     puts "Please enter their cohort month"
-    cohort = gets.chomp
+    cohort = STDIN.gets.chomp
 
     while cohort.empty?
       puts "You didn't include their cohort - Please enter one now."
-      cohort = gets.chomp
+      cohort = STDIN.gets.chomp
       if !cohort.empty?
         break
       end
@@ -86,7 +87,7 @@ def input_students
     
     # Get another name from the user
     puts "Please enter another students name or press return to finish adding students."
-    name = gets.chomp
+    name = STDIN.gets.chomp
   end
 end
 
@@ -132,15 +133,32 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students(filename = "students.csv")
+  # open file for loading
+  file = File.open(filename, "r")
+  # iterate over each line in students.csv
   file.readlines.each do |line|
-  name, cohort, hobby, occupation, nationality = line.chomp.split(",")
+    # Parallel assignment. Take each line in students.csv, remove trailing new line,
+    # and assign the values of the array to the variables.
+    name, cohort, hobby, occupation, nationality = line.chomp.split(",")
     @students << {name: name.capitalize, cohort: cohort, hobby: hobby, occupation: occupation, nationality: nationality.capitalize}
   end
+  # Close the file & let the user know that the process has worked.
   file.close
   puts "Previous students have been loaded."
 end
-  
-#call interactive menu to run the program
+
+def try_load_students
+  filename = ARGV.first # First argument from the command line
+  return if filename.nil? # Exit method if no argument given to command line
+  if File.exist?(filename) # If the file exists
+    load_students(filename) # Run load_students method with the argument of the filename given as argument in command line
+    puts "Loaded #{@students.count} from #{filename}"
+  else
+    puts "Sorry #{filename} doesn't exist."
+    exit #quit program
+  end
+end
+
+#call interactive menu method to run the program
 interactive_menu
