@@ -105,37 +105,15 @@ def print_footer
   case @students.length
     when 0
       puts "We need students!".center(50)
+      puts "\n"
     when 1
       puts "Overall, we have #{@students.length} great student".center(50)
+      puts "\n"
     else
       puts "Overall, we have #{@students.length} great students".center(50)
+      puts "\n"
   end
 end
-
-
-
-
-
-
-
-
-
-
-
-=begin
-def save_students(save_filename)
-  #open file for writing
-  file = File.open(save_filename, "w")
-  #iterate over the array of students
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort], student[:hobby], student[:occupation], student[:nationality]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
-  end
-  file.close
-end
-=end
-
 
 def save_students(save_filename)
   #open file for writing
@@ -149,27 +127,19 @@ def save_students(save_filename)
   end
 end
 
-
-
-
-
-
-
-
-
 def load_students(load_filename = "students.csv")
   # open file for loading
-  file = File.open(load_filename, "r")
-  # iterate over each line in students.csv
-  file.readlines.each do |line|
-    # Parallel assignment. Take each line in students.csv, remove trailing new line,
-    # and assign the values of the array to the variables.
-    name, cohort, hobby, occupation, nationality = line.chomp.split(",")
-    add_students_to_array(name, cohort, hobby, occupation, nationality) # calls add_students_to_array method to add the students to the student array
+  File.open(load_filename, "r") do |file|
+    # iterate over each line in students.csv
+    file.readlines.each do |line|
+      # Parallel assignment. Take each line in students.csv, remove trailing new line,
+      # and assign the values of the array to the variables.
+      name, cohort, hobby, occupation, nationality = line.chomp.split(",")
+      add_students_to_array(name, cohort, hobby, occupation, nationality) # calls add_students_to_array method to add the students to the student array
+    end
+    puts "Previous students from #{load_filename} have been loaded."
+    puts "\n"
   end
-  # Close the file & let the user know that the process has worked.
-  file.close
-  puts "Previous students have been loaded."
 end
 
 def try_load_students
