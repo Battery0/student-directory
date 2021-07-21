@@ -39,7 +39,6 @@ def process(selection)
       while true do
         puts "\nYou entered 4: Load the list of students from a .csv file"
         puts "Which .csv file would you like to load from?"
-        
         load_filename = STDIN.gets.chomp
         if load_filename.include? ".csv"
           load_students(load_filename)
@@ -113,6 +112,17 @@ def print_footer
   end
 end
 
+
+
+
+
+
+
+
+
+
+
+=begin
 def save_students(save_filename)
   #open file for writing
   file = File.open(save_filename, "w")
@@ -124,6 +134,28 @@ def save_students(save_filename)
   end
   file.close
 end
+=end
+
+
+def save_students(save_filename)
+  #open file for writing
+  File.open(save_filename, "w") do |file|
+    #iterate over the array of students
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort], student[:hobby], student[:occupation], student[:nationality]]
+      csv_line = student_data.join(",")
+      file.puts csv_line
+    end
+  end
+end
+
+
+
+
+
+
+
+
 
 def load_students(load_filename = "students.csv")
   # open file for loading
