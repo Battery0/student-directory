@@ -1,3 +1,5 @@
+require 'csv'
+
 @students = [] #empty array accesible to all methods
 
 def interactive_menu
@@ -19,14 +21,18 @@ end
 def process(selection)
   case selection
     when "1"
-      puts "\nYou entered 1: Input the students"
+      puts "\n"
+      puts "You entered 1: Input the students"
       input_students
     when "2"
-      puts "\nYou entered 2: Show the students\n\n"
+      puts "\n"
+      puts "You entered 2: Show the students"
+      puts "\n"
       show_students
     when "3"
       while true do
-        puts "\nYou entered 3: Save the list of students to a .csv file."
+        puts "\n"
+        puts "You entered 3: Save the list of students to a .csv file."
         puts "What is the name of the file you would like to save students to?"
         puts "Please ensure you save it with a .csv file extension"
         save_filename = STDIN.gets.chomp
@@ -37,7 +43,8 @@ def process(selection)
       end
     when "4"
       while true do
-        puts "\nYou entered 4: Load the list of students from a .csv file"
+        puts "\n"
+        puts "You entered 4: Load the list of students from a .csv file"
         puts "Which .csv file would you like to load from?"
         load_filename = STDIN.gets.chomp
         if load_filename.include? ".csv"
@@ -46,10 +53,12 @@ def process(selection)
         end
       end
     when "9"
-      puts "\nYou entered 9: Exit program"
+      puts"\n"
+      puts "You entered 9: Exit program"
       exit
     else
-      puts "\nI don't understand your command, please try again"
+      puts "\n"
+      puts "I don't understand your command, please try again"
   end
 end
 
@@ -60,7 +69,8 @@ def show_students
 end
 
 def input_students
-  puts "\nPlease enter the names of the students. To finish, just hit return (enter) twice"
+  puts "\n"
+  puts "Please enter the names of the students. To finish, just hit return (enter) twice"
   # Get the first name
   name = STDIN.gets.chomp
   # if name is an empty string - repeat this code
@@ -72,11 +82,7 @@ def input_students
     cohort = add_cohort
     # Add the student information hash to the student array
     add_students_to_array(name, cohort, hobby, occupation, nationality)
-    if @students.length == 1
-      puts "\nNow we have #{@students.length} student"
-    else
-      puts "\nNow we have #{@students.length} students"
-    end
+    @students.length == 1 ? (puts "\nNow we have #{@students.length} student") : (puts "\nNow we have #{@students.length} students")
     # Get another name from the user
     puts "Please enter another students name or press return to finish adding students."
     name = STDIN.gets.chomp
@@ -95,7 +101,8 @@ def print_students_list
     @students.each do |student|
       if student[:cohort] == month
         puts "Name: #{student[:name]}"
-        puts "Hobby: #{student[:hobby]}, Occupation: #{student[:occupation]}, Nationality: #{student[:nationality]}\n\n"
+        puts "Hobby: #{student[:hobby]}, Occupation: #{student[:occupation]}, Nationality: #{student[:nationality]}"
+        puts "\n"
       end
     end
   end
@@ -116,30 +123,20 @@ def print_footer
 end
 
 def save_students(save_filename)
-  #open file for writing
-  File.open(save_filename, "w") do |file|
-    #iterate over the array of students
+  CSV.open("./#{save_filename}", "wb") do |csv_file|
     @students.each do |student|
-      student_data = [student[:name], student[:cohort], student[:hobby], student[:occupation], student[:nationality]]
-      csv_line = student_data.join(",")
-      file.puts csv_line
+      csv_file << [student[:name], student[:cohort], student[:hobby], student[:occupation], student[:nationality]]
     end
   end
 end
 
 def load_students(load_filename = "students.csv")
-  # open file for loading
-  File.open(load_filename, "r") do |file|
-    # iterate over each line in students.csv
-    file.readlines.each do |line|
-      # Parallel assignment. Take each line in students.csv, remove trailing new line,
-      # and assign the values of the array to the variables.
-      name, cohort, hobby, occupation, nationality = line.chomp.split(",")
-      add_students_to_array(name, cohort, hobby, occupation, nationality) # calls add_students_to_array method to add the students to the student array
-    end
-    puts "Previous students from #{load_filename} have been loaded."
-    puts "\n"
+  CSV.foreach("./#{load_filename}") do |row_in_file|
+    name, cohort, hobby, occupation, nationality = row_in_file
+    add_students_to_array(name, cohort, hobby, occupation, nationality)
   end
+  puts "Previous students from #{load_filename} have been loaded."
+  puts "\n"
 end
 
 def try_load_students
@@ -159,7 +156,8 @@ def add_students_to_array(name, cohort, hobby, occupation, nationality)
 end
 
 def add_hobby
-  puts "\nPlease enter their hobby"
+  puts "\n"
+  puts "Please enter their hobby"
   hobby = STDIN.gets.chomp
   if hobby == ""
     return "not entered"
@@ -168,7 +166,8 @@ def add_hobby
 end
 
 def add_occupation
-  puts "\nPlease enter their current occupation"
+  puts "\n"
+  puts "Please enter their current occupation"
   occupation = STDIN.gets.chomp
   if occupation == ""
     return occupation = "not entered"
@@ -177,7 +176,8 @@ def add_occupation
 end
 
 def add_nationality
-  puts "\nPlease enter their nationality"
+  puts "\n"
+  puts "Please enter their nationality"
   nationality = STDIN.gets.chomp
   if nationality == ""
     return "not entered"
@@ -186,7 +186,8 @@ def add_nationality
 end
 
 def add_cohort
-  puts "\nPlease enter their cohort month"
+  puts "\n"
+  puts "Please enter their cohort month"
   cohort = STDIN.gets.chomp
   while cohort.empty?
     puts "You didn't include their cohort - Please enter one now."
